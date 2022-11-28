@@ -1,0 +1,166 @@
+#include <iostream>
+#include <bits/stdc++.h>
+
+using namespace std;
+struct data{
+    
+    int bursttime;
+    int arrivaltime;
+    
+}store [50];
+bool sorting(struct data a, struct data b)
+{
+	int x = a.arrivaltime;
+	int y = b.arrivaltime;
+
+	return (x < y);
+}
+
+int process;
+int waitingtime[50],averageturn[50],completiontime[50],gantt[50];
+float total_TAT,total_waitingtime;
+
+int main()
+{
+    int choice;
+    
+    do{
+    cout << "0 - Non Deterministic FCFS Single Queue" << endl << "1 - Non Deterministic FCFS Multiple Queue" <<endl << "2 - Quit:"<<endl <<"Enter your choice:";
+    cin >> choice;
+    
+    switch (choice)
+     {
+        case 0:
+            int arrivaltime;
+        
+        
+            cout << "\nEnter Number of Process:";
+            cin >> process;
+          
+            cout << "\nEnter Arrival Time:";
+            cin >> arrivaltime;
+            
+            
+          
+            for(int i=0; i< process; i++)
+            {
+                cout<<"\nEnter Burst Time: ";
+                cin >> store[i].bursttime;
+             
+            }
+            waitingtime[process], averageturn[process],arrivaltime, total_waitingtime=0,total_TAT=0;
+            
+            
+            
+            for (int i=0; i < process; i++){
+                
+                gantt[i] = (i==0) ? arrivaltime : max(arrivaltime, completiontime[i-1]);
+                completiontime[i] = gantt[i]  + store[i].bursttime; //completion 
+                averageturn[i] = completiontime[i] - arrivaltime;// computing turn around time
+                waitingtime[i] = gantt[i] - arrivaltime ; // computing waiting time
+                
+                
+                total_waitingtime= total_waitingtime + waitingtime[i];
+                total_TAT = total_TAT + averageturn[i];
+                
+            }
+            
+            for (int j=0; j < process; j++){ // process
+                    cout << "\n------------------------------------------------------------";
+                    cout << "\n Process: "<< j+1;
+                    cout << "\n Gantt Chart: " <<gantt[j];
+                    cout << "\n Arrival time: " << arrivaltime;
+                    cout << "\n Burst time: " << store[j].bursttime;
+                    cout << "\n Turn aroung time: " << completiontime[j] << " - " << arrivaltime << " = " << averageturn[j]; 
+                    cout << "\n Waiting time: "<< gantt[j] << " - " << arrivaltime << " = " << waitingtime[j];
+                    cout << "\n------------------------------------------------------------";
+                
+            }
+            
+            
+            cout << "\n-------------------------------------------------------------------------------------------------";
+            cout << "\nProcess" << "\t\t" << "BurstTime"<< "\t"<<"Arrival Time" << "\t" << "Waitingtime" << "\t" << "Turn Around Time" << endl;
+            for (int i=0; i < process; i++){ // Single Queue graph
+            cout << " " << i+1 << "\t\t" <<store[i].bursttime <<"\t\t"<<arrivaltime<< "\t\t" << waitingtime[i] << "\t\t" << averageturn[i] << endl;
+            }
+            
+            cout << "\n------------------------------------------------------------";
+            cout << "\n" << (float)total_waitingtime << " / " << process;
+            cout << "\nAverage waiting time = "<<(float)total_waitingtime / process;
+            cout << "\n" << (float)total_TAT << "/ " << process;
+            cout << "\nAverage turn around time = " << (float)total_TAT /process;
+            cout << endl;
+            cout << endl;
+            
+            break;
+        case 1:
+            
+            
+            cout << "\nEnter Number of Process:";
+            cin >> process;
+        
+            for(int i=0; i < process; i++)
+            {
+                cout<<"\nEnter Burst Time: ";
+                cin >> store[i].bursttime;
+        
+            }
+            
+               
+            for (int i=0; i < process; i++){
+                cout<<"\nEnter Arrval Time: ";
+                cin >> store[i].arrivaltime;
+            }
+            
+            sort(store,store+process,sorting);
+            
+            waitingtime[process], averageturn[process],store[process].arrivaltime,store[process].bursttime, total_waitingtime=0,total_TAT=0;
+            
+           
+            for (int i=0; i < process; i++){
+                
+                gantt[i] = (i==0) ? store[i].arrivaltime : max(store[i].arrivaltime, completiontime[i-1]); // GanttChart
+                completiontime[i] = gantt[i]  + store[i].bursttime; //completion to compute the Average turn around time
+                averageturn[i] = completiontime[i] - store[i].arrivaltime;// computing Average turn around time 
+                waitingtime[i] = gantt[i] - store[i].arrivaltime ; // computing waiting time
+                
+                total_waitingtime= total_waitingtime + waitingtime[i];
+                total_TAT = total_TAT + averageturn[i];
+              
+            }
+            for (int j=0; j < process; j++){ // process 
+                    cout << "\n------------------------------------------------------------";
+                    cout << "\n Process: "<< j+;
+                    cout << "\n Gantt Chart: " <<gantt[j];
+                    cout << "\n Arrival time: " << store[j].arrivaltime;
+                    cout << "\n Burst time: " << store[j].bursttime;
+                    cout << "\n Completion time: " << gantt[j]  << " + " << store[j].bursttime << " = " << completiontime[j];
+                    cout << "\n Turn aroung time: " << completiontime[j] << " - " << store[j].arrivaltime << " = " << averageturn[j];
+                    cout << "\n Waiting time: "<< gantt[j] << " - " << store[j].arrivaltime << " = " << waitingtime[j];
+                    cout << "\n------------------------------------------------------------";
+            }
+            
+            
+            cout << "\n-------------------------------------------------------------------------------------------------";
+            cout << "\nProcess" << "\t\t" << "BurstTime"<< "\t"<<"Arrival Time"<< "\t" << "Waitingtime" << "\t\t" << "Turn Around Time" << endl;
+            for(int i=0; i < process; i++){ // Multiple Queue Graph
+            cout << " " << i+1 << "\t\t" << store[i].bursttime <<"\t\t"<<store[i].arrivaltime<< "\t\t" << waitingtime[i] << "\t\t\t" << averageturn[i] << endl;
+            }
+            
+            
+            cout << "\n------------------------------------------------------------";
+            cout << "\nAverage waiting time = "<< (float)total_waitingtime / process;
+            cout << "\nAverage turn around time = " << (float) total_TAT /process;
+            cout << endl;
+            cout << endl;
+            
+            break;
+        case 2:
+        
+            return 0;
+     }
+    } while (choice != 2);
+    
+    return 0;
+    
+}

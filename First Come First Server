@@ -130,7 +130,7 @@ int main()
             }
             for (int j=0; j < process; j++){ // process 
                     cout << "\n------------------------------------------------------------";
-                    cout << "\n Process: "<< j+;
+                    cout << "\n Process: "<< j+1;
                     cout << "\n Gantt Chart: " <<gantt[j];
                     cout << "\n Arrival time: " << store[j].arrivaltime;
                     cout << "\n Burst time: " << store[j].bursttime;
